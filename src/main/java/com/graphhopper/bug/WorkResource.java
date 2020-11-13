@@ -20,13 +20,10 @@ package com.graphhopper.bug;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.constraints.NotNull;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.Map;
@@ -36,7 +33,7 @@ public class WorkResource {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response work(@NotNull Map<String, String> request, @Context HttpServletRequest httpReq) {
+    public Response work(Map<String, String> request) {
         String type = request.get("type");
         ObjectNode json = JsonNodeFactory.instance.objectNode();
         json.put("type", type);
