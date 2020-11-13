@@ -15,9 +15,9 @@ public class Client {
     private static final Logger logger = LoggerFactory.getLogger(Client.class);
     private static final OkHttpClient client = createClient();
     public static final int PORT = 8989;
-    private static final int NUM_WORK_A_REQUESTS = 10_000;
-    private static final int NUM_WORK_B_REQUESTS = 10_000;
-    private static final int NUM_INTERFERE_REQUESTS = 100;
+    private static final int NUM_WORK_A_REQUESTS = 1000;
+    private static final int NUM_WORK_B_REQUESTS = 1000;
+    private static final int NUM_INTERFERE_REQUESTS = 10;
 
     public static void main(String[] args) throws Exception {
         Thread t1 = new Thread(() -> work("A", NUM_WORK_A_REQUESTS));
@@ -82,7 +82,7 @@ public class Client {
             for (int i = 0; i < count; i++) {
                 if (i > 0 && i % 10 == 0)
                     logger.info("Sent " + i + " interfere requests");
-                sleep(3 * 1000);
+                sleep(150);
                 sendInterfereRequest();
             }
             logger.info("Interfere requests all fine");
@@ -95,7 +95,7 @@ public class Client {
         Response rsp = null;
         try {
             Request.Builder reqBuilder = new Request.Builder().url("http://localhost:" + PORT + "/interfere");
-            reqBuilder.post(RequestBody.create("<gpx></gpx>", MediaType.parse("application/json")));
+            reqBuilder.post(RequestBody.create("<bomb>", MediaType.parse("application/json")));
 
             rsp = client.newCall(reqBuilder.build()).execute();
             if (rsp.code() != 400)
