@@ -1,7 +1,5 @@
 package com.graphhopper.bug;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import io.dropwizard.Application;
 import io.dropwizard.Configuration;
 import io.dropwizard.setup.Bootstrap;
@@ -16,8 +14,6 @@ public class App extends Application<Configuration> {
     @Override
     public void initialize(Bootstrap<Configuration> bootstrap) {
         bootstrap.setObjectMapper(io.dropwizard.jackson.Jackson.newMinimalObjectMapper());
-        ObjectMapper objectMapper = bootstrap.getObjectMapper();
-        objectMapper.setPropertyNamingStrategy(PropertyNamingStrategy.SNAKE_CASE);
     }
 
     @Override
