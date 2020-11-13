@@ -56,10 +56,11 @@ public class Client {
             Request.Builder reqBuilder = new Request.Builder().url("http://localhost:" + PORT + "/work");
             reqBuilder.post(RequestBody.create("{\"type\":\"" + type + "\"}", MediaType.parse("application/json")));
             rsp = Client.client.newCall(reqBuilder.build()).execute();
+            logger.info("/work request returned with status: " + rsp.code());
             String header = rsp.header("endpoint", "none");
             if ("none".equals(header))
-                throw new IllegalStateException("Missing header for response of work request");
-            if (!"work".equals(header))
+                logger.warn("Missing header for response of work request");
+            else if (!"work".equals(header))
                 throw new Bug("BUG: Wrong header! Expected: work, Given: " + header);
             String str = rsp.body().string();
 //            Object jsonobj = new ObjectMapper().readValue(str, Object.class);
@@ -96,8 +97,8 @@ public class Client {
         try {
             Request.Builder reqBuilder = new Request.Builder().url("http://localhost:" + PORT + "/interfere");
             reqBuilder.post(RequestBody.create("<bomb>", MediaType.parse("application/json")));
-
             rsp = client.newCall(reqBuilder.build()).execute();
+            logger.info("/interfere request returned with: " + rsp.code());
             if (rsp.code() != 400)
                 throw new IllegalStateException("Expected 400 response from /interfere, but got: " + rsp.code());
         } finally {
