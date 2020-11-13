@@ -54,7 +54,7 @@ public class Client {
         Response rsp = null;
         try {
             Request.Builder reqBuilder = new Request.Builder().url("http://localhost:" + PORT + "/work");
-            reqBuilder.post(RequestBody.create("{\"type\":\"" + type + "\"}", MediaType.parse("application/json; charset=utf-8")));
+            reqBuilder.post(RequestBody.create("{\"type\":\"" + type + "\"}", MediaType.parse("application/json")));
             rsp = Client.client.newCall(reqBuilder.build()).execute();
             String header = rsp.header("endpoint", "none");
             if ("none".equals(header))
@@ -95,7 +95,7 @@ public class Client {
         Response rsp = null;
         try {
             Request.Builder reqBuilder = new Request.Builder().url("http://localhost:" + PORT + "/interfere");
-            reqBuilder.post(RequestBody.create("<gpx></gpx>", MediaType.parse("application/gpx+xml")));
+            reqBuilder.post(RequestBody.create("<gpx></gpx>", MediaType.parse("application/json")));
 
             rsp = client.newCall(reqBuilder.build()).execute();
             if (rsp.code() != 400)
