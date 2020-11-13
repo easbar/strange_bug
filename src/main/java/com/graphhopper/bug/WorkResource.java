@@ -36,7 +36,7 @@ public class WorkResource {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response doPost(@NotNull Map<String, String> request, @Context HttpServletRequest httpReq) {
+    public Response work(@NotNull Map<String, String> request, @Context HttpServletRequest httpReq) {
         String type = request.get("type");
         ObjectNode json = JsonNodeFactory.instance.objectNode();
         json.put("type", type);

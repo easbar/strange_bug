@@ -31,9 +31,9 @@ import javax.ws.rs.core.UriInfo;
 public class InterfereResource {
 
     @POST
-    @Consumes({MediaType.APPLICATION_XML, "application/gpx+xml"})
+    @Consumes(MediaType.APPLICATION_JSON)
     @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, "application/gpx+xml"})
-    public Response match(@Context HttpServletRequest request, @Context UriInfo uriInfo) {
+    public Response interfere(@Context HttpServletRequest request, @Context UriInfo uriInfo) {
         return Response.status(400).header("endpoint", "interfere").build();
     }
 
