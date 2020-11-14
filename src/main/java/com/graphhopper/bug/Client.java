@@ -59,9 +59,11 @@ public class Client {
         try (CloseableHttpResponse rsp = client.execute(post)) {
             Header header = rsp.getFirstHeader("endpoint");
             if (header == null)
-                throw new IllegalStateException("Missing header for response of work request");
+                throw new IllegalStateException("Missing header for response of work request (" + type + ") -> "
+                        + rsp.getStatusLine() + " " + EntityUtils.toString(rsp.getEntity()));
             else if (!"work".equals(header.getValue()))
                 throw new Bug("BUG: Wrong header! Expected: work, Given: " + header.getValue());
+
             String str = EntityUtils.toString(rsp.getEntity());
 //            Object jsonobj = new ObjectMapper().readValue(str, Object.class);
 //            new ObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(jsonobj);
@@ -94,10 +96,10 @@ public class Client {
 
     private static void sendInterfereRequest() throws IOException {
         HttpPost post = new HttpPost("http://localhost:" + PORT + "/interfere");
-        post.setEntity(new GzipCompressingEntity(new StringEntity("<bomb>", ContentType.APPLICATION_XML)));
+        post.setEntity(new GzipCompressingEntity(new StringEntity("<bomb>", ContentType.TEXT_PLAIN)));
         try (CloseableHttpResponse rsp = client.execute(post)) {
             EntityUtils.consume(rsp.getEntity());
-            if (rsp.getStatusLine().getStatusCode() != 400)
+            if (rsp.getStatusLine().getStatusCode() != 415)
                 System.out.println("Expected 400 response from /interfere, but got: " + rsp.getStatusLine().getStatusCode());
         }
     }
