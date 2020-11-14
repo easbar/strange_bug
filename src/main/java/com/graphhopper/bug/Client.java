@@ -96,7 +96,7 @@ public class Client {
 
     private static void sendInterfereRequest() throws IOException {
         HttpPost post = new HttpPost("http://localhost:" + PORT + "/interfere");
-        post.setEntity(new GzipCompressingEntity(new StringEntity("<bomb>", ContentType.TEXT_PLAIN)));
+        post.setEntity(new GzipCompressingEntity(new StringEntity("<bomb>", ContentType.APPLICATION_JSON)));
         try (CloseableHttpResponse rsp = client.execute(post)) {
             EntityUtils.consume(rsp.getEntity());
             if (rsp.getStatusLine().getStatusCode() != 415)
