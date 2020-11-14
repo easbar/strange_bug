@@ -11,12 +11,15 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
 public class Client {
+    private static final Logger logger = LoggerFactory.getLogger(Client.class);
     public static final int PORT = 8989;
     private static final int NUM_WORK_A_REQUESTS = 1000;
     private static final int NUM_WORK_B_REQUESTS = 1000;
@@ -34,22 +37,22 @@ public class Client {
 
         t1.join();
         t2.join();
-        System.out.println("finished");
+        logger.info("finished");
         client.close();
     }
 
     private static void work(String type, int count) {
         try {
-            System.out.println("Start sending work requests of type " + type);
+            logger.info("Start sending work requests of type " + type);
             for (int i = 0; i < count; i++) {
                 if (i > 0 && i % 1000 == 0)
-                    System.out.println("Sent " + i + " work requests of type " + type);
+                    logger.info("Sent " + i + " work requests of type " + type);
                 sleep(System.currentTimeMillis() % 37);
                 sendWorkRequest(type);
             }
-            System.out.println("Work request of type " + type + " are all fine");
+            logger.info("Work request of type " + type + " are all fine");
         } catch (Bug bug) {
-            System.out.println("BUG DETECTED " + bug.getMessage());
+            logger.error("BUG DETECTED " + bug.getMessage());
         }
     }
 
@@ -75,22 +78,22 @@ public class Client {
             if (!rspType.equals(type))
                 throw new Bug("BUG: Wrong response type for work request! Expected: " + type + ", Given: " + rspType);
         } catch (Exception ex) {
-            System.out.println("Problem for work " + ex.getMessage());
+            logger.info("Problem for work " + ex.getMessage());
         }
     }
 
     private static void interfere(int count) {
         try {
-            System.out.println("Start sending interfere requests");
+            logger.info("Start sending interfere requests");
             for (int i = 0; i < count; i++) {
                 if (i > 0 && i % 10 == 0)
-                    System.out.println("Sent " + i + " interfere requests");
+                    logger.info("Sent " + i + " interfere requests");
                 sleep(150);
                 sendInterfereRequest();
             }
-            System.out.println("Interfere requests all fine");
+            logger.info("Interfere requests all fine");
         } catch (IOException ex) {
-            System.out.println("Error when sending interfere requests");
+            logger.error("Error when sending interfere requests");
         }
     }
 
@@ -100,7 +103,7 @@ public class Client {
         try (CloseableHttpResponse rsp = client.execute(post)) {
             EntityUtils.consume(rsp.getEntity());
             if (rsp.getStatusLine().getStatusCode() != 415)
-                System.out.println("Expected 400 response from /interfere, but got: " + rsp.getStatusLine().getStatusCode());
+                logger.info("Expected 400 response from /interfere, but got: " + rsp.getStatusLine().getStatusCode());
         }
     }
 
